@@ -20,3 +20,13 @@ vTaskDelete(): It locates at vTaskDelete() of tasks.c;
 + 作为库的c文件不要写main函数
 + 注意编写Cargo.toml和build.rs两个文件
 + 我写了一个示例程序，在仓库的example文件夹下
+## Demo
+在demo文件夹下有一个demo，是Freertos的7.1.0版本，可以直接在Windows环境下运行。编译程序时应当先编译所有的c文件，再将其链接为一个可执行文件（似乎dev C++是不行的，建议在windows下安装tdm-gcc）。
+>gcc -c main.c  
+gcc -c tasks.c  
+......  
+gcc -o main.exe main.o tasks.o ......  
+
+附：
++ 内核应当进行裁剪。
++ 代码还存在严重问题（main.c是我自己写的），不知道为什么，当前的进程会很快崩溃，但我在Visual Studio运行它的demo时没有问题。
