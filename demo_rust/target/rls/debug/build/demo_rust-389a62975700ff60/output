@@ -1,0 +1,234 @@
+TARGET = Some("x86_64-pc-windows-msvc")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CFLAGS_x86_64-pc-windows-msvc = None
+CFLAGS_x86_64_pc_windows_msvc = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/Foe:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\list.o" "/c" "src/list.c"
+list.c
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\liblist.a" "/nologo" "e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\list.o"
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+cargo:rustc-link-lib=static=list
+cargo:rustc-link-search=native=e:\鎴戠殑绋嬪簭\鎿嶄綔绯荤粺\X-rocker\demo_rust\target\rls\debug\build\demo_rust-389a62975700ff60\out
+TARGET = Some("x86_64-pc-windows-msvc")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CFLAGS_x86_64-pc-windows-msvc = None
+CFLAGS_x86_64_pc_windows_msvc = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/Foe:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\tasks.o" "/c" "src/tasks.c"
+tasks.c
+src/tasks.c(419): warning C4311: “类型强制转换”: 从“unsigned long *”到“unsigned long”的指针截断
+src/tasks.c(419): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“unsigned long *”
+src/tasks.c(422): warning C4311: “类型强制转换”: 从“unsigned long *”到“unsigned long”的指针截断
+src/tasks.c(458): warning C4311: “类型强制转换”: 从“volatile unsigned long *”到“unsigned long”的指针截断
+src/tasks.c(1281): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\string.h(89): note: 参见“strcat”的声明
+src/tasks.c(1913): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/tasks.c(1944): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\string.h(337): note: 参见“strncpy”的声明
+src/tasks.c(2172): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 参见“sprintf”的声明
+src/tasks.c(2173): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\string.h(89): note: 参见“strcat”的声明
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\libtasks.a" "/nologo" "e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\tasks.o"
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+cargo:rustc-link-lib=static=tasks
+cargo:rustc-link-search=native=e:\鎴戠殑绋嬪簭\鎿嶄綔绯荤粺\X-rocker\demo_rust\target\rls\debug\build\demo_rust-389a62975700ff60\out
+TARGET = Some("x86_64-pc-windows-msvc")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CFLAGS_x86_64-pc-windows-msvc = None
+CFLAGS_x86_64_pc_windows_msvc = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/Foe:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\port.o" "/c" "src/port.c"
+port.c
+src/port.c(254): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(363): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(376): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(402): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(434): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(501): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\libport.a" "/nologo" "e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\port.o"
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+cargo:rustc-link-lib=static=port
+cargo:rustc-link-search=native=e:\鎴戠殑绋嬪簭\鎿嶄綔绯荤粺\X-rocker\demo_rust\target\rls\debug\build\demo_rust-389a62975700ff60\out
+TARGET = Some("x86_64-pc-windows-msvc")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CFLAGS_x86_64-pc-windows-msvc = None
+CFLAGS_x86_64_pc_windows_msvc = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/Foe:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\queue.o" "/c" "src/queue.c"
+queue.c
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\libqueue.a" "/nologo" "e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\queue.o"
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+cargo:rustc-link-lib=static=queue
+cargo:rustc-link-search=native=e:\鎴戠殑绋嬪簭\鎿嶄綔绯荤粺\X-rocker\demo_rust\target\rls\debug\build\demo_rust-389a62975700ff60\out
+TARGET = Some("x86_64-pc-windows-msvc")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CFLAGS_x86_64-pc-windows-msvc = None
+CFLAGS_x86_64_pc_windows_msvc = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/Foe:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\heap_3.o" "/c" "src/heap_3.c"
+heap_3.c
+src/heap_3.c(94): warning C4210: 使用了非标准扩展: 函数给定文件范围
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\libheap_3.a" "/nologo" "e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\heap_3.o"
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+cargo:rustc-link-lib=static=heap_3
+cargo:rustc-link-search=native=e:\鎴戠殑绋嬪簭\鎿嶄綔绯荤粺\X-rocker\demo_rust\target\rls\debug\build\demo_rust-389a62975700ff60\out
+TARGET = Some("x86_64-pc-windows-msvc")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CFLAGS_x86_64-pc-windows-msvc = None
+CFLAGS_x86_64_pc_windows_msvc = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/Foe:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\other.o" "/c" "src/other.c"
+other.c
+src/other.c(10): warning C4100: “pvParameters”: 未引用的形参
+src/other.c(50): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/other.c(51): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/other.c(52): warning C4210: 使用了非标准扩展: 函数给定文件范围
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\libother.a" "/nologo" "e:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\rls\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\other.o"
+exit code: 0
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+TARGET = Some("x86_64-pc-windows-msvc")
+HOST = Some("x86_64-pc-windows-msvc")
+CC_x86_64-pc-windows-msvc = None
+CC_x86_64_pc_windows_msvc = None
+HOST_CC = None
+CC = None
+cargo:rustc-link-lib=static=other
+cargo:rustc-link-search=native=e:\鎴戠殑绋嬪簭\鎿嶄綔绯荤粺\X-rocker\demo_rust\target\rls\debug\build\demo_rust-389a62975700ff60\out

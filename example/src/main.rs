@@ -53,6 +53,7 @@ extern "C" {
 //static mut version: c_int;
 //fn sum(a:c_int,b:c_int) -> c_int;
 fn getcar(x:*mut car) -> *mut c_char;
+//fn add(a:c_int,b:c_int)-> c_int;
 }
 
 fn get_string(raw_string:*mut c_char) -> String {
@@ -68,5 +69,6 @@ fn main() {
 let mut x = car::new(200,300,"Wang");
 let s=unsafe{get_string(getcar(&mut x))};
 println!("{}", s);
+//print!("{}",unsafe{add(4,5)});
 //print!("{}",unsafe{get_string(user)});
 }

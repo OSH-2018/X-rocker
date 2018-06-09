@@ -1,4 +1,5 @@
 #include<stdio.h>
+#define add(a,b) a+b
 char s[100];
 char user[100]="WangHaoyu";
 int version=3;
@@ -38,8 +39,9 @@ int main(){
 		x.a[i].price=123;
 		x.a[i].color=1;
 	}
+	printf("%d\n",add(2,4));
 	puts(getcar(&x));
-	puts(user);
+	//puts(user);
 	//printf("%s",getcar(&x));
 	return 0;
 }
