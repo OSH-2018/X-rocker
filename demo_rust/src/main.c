@@ -2,14 +2,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-//#include "timers.h"
 #include "semphr.h"
-//#include "TimerDemo.h"
-//#define mainTIMER_TEST_PERIOD			( 250 )
 static xSemaphoreHandle xMutexToDelete = NULL;
 static char *pcStatusMessage = "OK";
 xTaskHandle xTask2Handle; 
-void vTask1( void *pvParameters ) 
+static void vTask1( void *pvParameters ) 
 { 
 	unsigned portBASE_TYPE uxPriority; 
 	/* 本任务将会比任务2更先运行，因为本任务创建在更高的优先级上。任务1和任务2都不会阻塞，所以两者要
@@ -31,7 +28,7 @@ void vTask1( void *pvParameters )
 		vTaskDelay(50);	
 	} 
 } 
-void vTask2( void *pvParameters ) 
+static void vTask2( void *pvParameters ) 
 { 
 	unsigned portBASE_TYPE uxPriority; 
 	/* 任务1比本任务更先启动，因为任务1创建在更高的优先级。任务1和任务2都不会阻塞，所以两者要么处于
@@ -50,7 +47,6 @@ void vTask2( void *pvParameters )
 		vTaskDelay(50);
 	}
 }
-
 int main( void ) 
 { 
 /* Create one of the two tasks. */ 
@@ -66,6 +62,7 @@ CHAPTER 5 provides more information on memory management. */
 	for( ;; ); 
 	return 0;
 } 
+
 
 void vAssertCalled( void )
 {

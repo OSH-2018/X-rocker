@@ -1,3 +1,4 @@
+//# #![feature(libc)]
 extern crate libc;
 use libc::{c_long,c_void,c_char,c_ushort,c_ulong};
 use std::ffi::CString;
