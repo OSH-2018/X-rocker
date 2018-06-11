@@ -1,8 +1,9 @@
 //# #![feature(libc)]
+#[cfg(all(target_os = "win32", target_arch = "x86"))]
 extern crate libc;
-use libc::{c_long,c_void,c_char,c_ushort,c_ulong};
-use std::ffi::CString;
-use std::ptr;
+//use libc::{c_long,c_void,c_char,c_ushort,c_ulong};
+//use std::ffi::CString;
+//use std::ptr;
 /*
 #[repr(C)]
 pub struct xMemoryRegion
@@ -12,7 +13,8 @@ pub struct xMemoryRegion
 	ulParameters: c_ulong,
 } 
 */
-//#[cfg(all(target_os = "win32", target_arch = "x86"))]
+
+
 #[link(name="other")]
 extern "C"{
     //fn vTask(pvParameters: *mut c_void);
@@ -46,6 +48,7 @@ fn main() {
         //let name=CString::new("Task").unwrap();
         //let p1:*mut c_void=ptr::null_mut();
         //let p2:*mut(*mut c_void)=ptr::null_mut();
+        //print!("123\n");
         xStartTask();
         //xTaskGenericCreate(vTask,name.as_ptr(),1000,p1,1,p2,ptr::null_mut(),ptr::null());
         print!("taskcreated");

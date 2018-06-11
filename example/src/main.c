@@ -1,3 +1,12 @@
+//#include "test.lib"
+#pragma  comment(lib, "test.dll.lib")
+extern void test();
+int main(){
+	test();
+	return 0;
+}
+
+/*
 #include<stdio.h>
 #define add(a,b) a+b
 char s[100];
@@ -30,6 +39,7 @@ char* getcar(struct car*  x){
 	puts(s);
 	return s;
 }
+*/
 /*
 int main(){
 	struct car x;

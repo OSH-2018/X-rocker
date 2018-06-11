@@ -184,23 +184,23 @@ void *x;
 	used, just not in the conventional way.  It will not be used for anything
 	other than holding this structure. */
 	pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
-	puts("ok");
+	//puts("ok");
 	/* Create the thread itself. */
-	printf("%d\n",(int)pxCode);
-	printf("%d\n", CREATE_SUSPENDED);
-	if (pvParameters==NULL) puts("123");
+	//printf("%d\n",(int)pxCode);
+	//printf("%d\n", CREATE_SUSPENDED);
+	//if (pvParameters==NULL) puts("123");
 	x=CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
-	puts("ok");
-	printf("%d\n",(int)x);
-	if (pxThreadState==NULL) puts("NullPointError");
-	else puts("Point ok");
-	printf("%d\n",(int)pxThreadState);
+	//puts("ok");
+	//printf("%d\n",(int)x);
+	//if (pxThreadState==NULL) puts("NullPointError");
+	//else puts("Point ok");
+	//printf("%d\n",(int)pxThreadState);
 	pxThreadState->pvThread = x;
-	puts("1");
+	//puts("1");
 	SetThreadAffinityMask( pxThreadState->pvThread, 0x01 );
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
-	puts("return ok");
+	//puts("return ok");
 	return ( portSTACK_TYPE * ) pxThreadState;
 }
 /*-----------------------------------------------------------*/
@@ -261,19 +261,20 @@ xThreadState *pxThreadState;
 		
 		/* Start the highest priority task by obtaining its associated thread 
 		state structure, in which is stored the thread handle. */
-		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+		pxThreadState = ( xThreadState * ) *( ( unsigned long long * ) pxCurrentTCB );
+		
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
 		/* Bump up the priority of the thread that is going to run, in the
 		hope that this will asist in getting the Windows thread scheduler to
 		behave as an embedded engineer might expect. */
 		ResumeThread( pxThreadState->pvThread );
-
+		//puts("p ok");
 		/* Handle all simulated interrupts - including yield requests and 
 		simulated ticks. */
 		prvProcessSimulatedInterrupts();
 	}	
-	
+
 	/* Would not expect to return from prvProcessSimulatedInterrupts(), so should 
 	not get here. */
 	return 0;
@@ -333,7 +334,7 @@ void *pvObjectList[ 2 ];
 		/* Used to indicate whether the simulated interrupt processing has
 		necessitated a context switch to another task/thread. */
 		ulSwitchRequired = pdFALSE;
-
+		//puts("1");
 		/* For each interrupt we are interested in processing, each of which is
 		represented by a bit in the 32bit ulPendingInterrupts variable. */
 		for( i = 0; i < portMAX_INTERRUPTS; i++ )
@@ -355,7 +356,7 @@ void *pvObjectList[ 2 ];
 				ulPendingInterrupts &= ~( 1UL << i );
 			}
 		}
-
+		//puts("2");
 		if( ulSwitchRequired != pdFALSE )
 		{
 			void *pvOldCurrentTCB;
@@ -370,7 +371,7 @@ void *pvObjectList[ 2 ];
 			if( pvOldCurrentTCB != pxCurrentTCB )
 			{
 				/* Suspend the old thread. */
-				pxThreadState = ( xThreadState *) *( ( unsigned long * ) pvOldCurrentTCB );
+				pxThreadState = ( xThreadState *) *( ( unsigned long long* ) pvOldCurrentTCB );
 
 				if( ( ulSwitchRequired & ( 1 << portINTERRUPT_DELETE_THREAD ) ) != pdFALSE )
 				{
@@ -378,12 +379,14 @@ void *pvObjectList[ 2 ];
 				}
 				else
 				{
+					//printf("%d thread is suspending.\n",pxThreadState->pvThread);
 					SuspendThread( pxThreadState->pvThread );
 				}							
 
 				/* Obtain the state of the task now selected to enter the 
 				Running state. */
-				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
+				pxThreadState = ( xThreadState * ) ( *( unsigned long long *) pxCurrentTCB );
+				//printf("%d thread is running.\n",pxThreadState->pvThread);
 				ResumeThread( pxThreadState->pvThread );
 			}
 		}

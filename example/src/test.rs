@@ -1,3 +1,11 @@
+#![crate_type = "staticlib"]
+#[no_mangle]
+pub extern "C" fn test() {
+    print!("HEllo");
+}
+
+
+/*
 extern crate libc;
 use libc::{c_int};
 use std::ffi::CStr;
@@ -72,3 +80,4 @@ println!("{}", s);
 //print!("{}",unsafe{add(4,5)});
 //print!("{}",unsafe{get_string(user)});
 }
+*/

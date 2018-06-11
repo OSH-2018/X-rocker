@@ -389,8 +389,8 @@ tskTCB * pxNewTCB;
 
 	/* Allocate the memory required by the TCB and stack for the new task,
 	checking that the allocation was successful. */
-	pxNewTCB = prvAllocateTCBAndStack( usStackDepth, puxStackBuffer );
-	puts("alloc success");
+	pxNewTCB = prvAllocateTCBAndStack( usStackDepth+10, puxStackBuffer );
+	//puts("alloc success");
 	if( pxNewTCB != NULL )
 	{
 		portSTACK_TYPE *pxTopOfStack;
@@ -415,15 +415,16 @@ tskTCB * pxNewTCB;
 		required by the port. */
 		#if( portSTACK_GROWTH < 0 )
 		{
-			puts("growsdown");
-			printf("%d\n",(int)(pxNewTCB->pxStack+999));
-			pxNewTCB->pxStack[999]=0;
+			//puts("growsdown");
+			//printf("%d\n",(int)(pxNewTCB->pxStack+999));
+			//pxTopOfStack = pxNewTCB->pxStack + 998;
+			//pxNewTCB->pxStack[999]=0;
 			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( unsigned short ) 1 );
-			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK  ) );
-			printf("%d\n",(int)pxTopOfStack);
-			pxTopOfStack[0]=0;
-			puts("p");
-			*(pxTopOfStack-1)=0;
+			//pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK  ) );
+			//printf("%d\n",(int)pxTopOfStack);
+			//pxTopOfStack[0]=0;
+			//puts("p");
+			//*(pxTopOfStack-1)=0;
 			
 			/* Check the alignment of the calculated top of stack is correct. */
 			configASSERT( ( ( ( unsigned long ) pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
@@ -444,23 +445,23 @@ tskTCB * pxNewTCB;
 
 		/* Setup the newly allocated TCB with the initial state of the task. */
 		prvInitialiseTCBVariables( pxNewTCB, pcName, uxPriority, xRegions, usStackDepth );
-		puts("init success");
+		//puts("init success");
 		/* Initialize the TCB stack to look as if the task was already running,
 		but had been interrupted by the scheduler.  The return address is set
 		to the start of the task function. Once the stack has been initialised
 		the	top of stack variable is updated. */
 		#if( portUSING_MPU_WRAPPERS == 1 )
 		{
-			puts("1");
+			//puts("1");
 			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
 		}
 		#else
 		{
-			puts("2");
+			//puts("2");
 			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
 		}
 		#endif
-		puts("portinitsuccess");
+		//puts("portinitsuccess");
 		/* Check the alignment of the initialised stack. */
 		portALIGNMENT_ASSERT_pxCurrentTCB( ( ( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 
@@ -1074,7 +1075,7 @@ portBASE_TYPE xReturn;
 		}
 	}
 	#endif
-
+	//puts("Idle Task ok");
 	if( xReturn == pdPASS )
 	{
 		/* Interrupts are turned off here, to ensure a tick does not occur
@@ -1094,7 +1095,7 @@ portBASE_TYPE xReturn;
 		macro must be defined to configure the timer/counter used to generate
 		the run time counter time base. */
 		portCONFIGURE_TIMER_FOR_RUN_TIME_STATS();
-		
+		//puts("Prepare all ok");
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
 		if( xPortStartScheduler() != pdFALSE )
@@ -2135,8 +2136,8 @@ tskTCB *pxNewTCB;
 		The base of the stack memory stored in the TCB so the task can
 		be deleted later if required. */
 		pxNewTCB->pxStack = ( portSTACK_TYPE * ) pvPortMallocAligned( ( ( ( size_t )usStackDepth ) * sizeof( portSTACK_TYPE ) ), puxStackBuffer );
-		printf("%d\n",usStackDepth);
-		pxNewTCB->pxStack[999]=0;
+		//printf("%d\n",usStackDepth);
+		//pxNewTCB->pxStack[999]=0;
 		if( pxNewTCB->pxStack == NULL )
 		{
 			/* Could not allocate the stack.  Delete the allocated TCB. */

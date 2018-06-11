@@ -53,20 +53,16 @@ CFLAGS = None
 DEBUG = Some("true")
 running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/FoE:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\tasks.o" "/c" "src/tasks.c"
 tasks.c
-src/tasks.c(419): warning C4311: “类型强制转换”: 从“unsigned long *”到“int”的指针截断
-src/tasks.c(422): warning C4311: “类型强制转换”: 从“unsigned long *”到“unsigned long”的指针截断
-src/tasks.c(422): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“unsigned long *”
-src/tasks.c(423): warning C4311: “类型强制转换”: 从“unsigned long *”到“int”的指针截断
-src/tasks.c(429): warning C4311: “类型强制转换”: 从“unsigned long *”到“unsigned long”的指针截断
-src/tasks.c(465): warning C4311: “类型强制转换”: 从“volatile unsigned long *”到“unsigned long”的指针截断
-src/tasks.c(1288): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+src/tasks.c(430): warning C4311: “类型强制转换”: 从“unsigned long *”到“unsigned long”的指针截断
+src/tasks.c(466): warning C4311: “类型强制转换”: 从“volatile unsigned long *”到“unsigned long”的指针截断
+src/tasks.c(1289): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\string.h(89): note: 参见“strcat”的声明
-src/tasks.c(1920): warning C4210: 使用了非标准扩展: 函数给定文件范围
-src/tasks.c(1951): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+src/tasks.c(1921): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/tasks.c(1952): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\string.h(337): note: 参见“strncpy”的声明
-src/tasks.c(2180): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+src/tasks.c(2181): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 参见“sprintf”的声明
-src/tasks.c(2181): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+src/tasks.c(2182): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt\string.h(89): note: 参见“strcat”的声明
 exit code: 0
 TARGET = Some("x86_64-pc-windows-msvc")
@@ -103,15 +99,9 @@ CFLAGS = None
 DEBUG = Some("true")
 running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/FoE:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\port.o" "/c" "src/port.c"
 port.c
-src/port.c(189): warning C4311: “类型强制转换”: 从“pdTASK_CODE”到“int”的指针截断
-src/port.c(194): warning C4311: “类型强制转换”: 从“void *”到“int”的指针截断
-src/port.c(197): warning C4311: “类型强制转换”: 从“xThreadState *”到“int”的指针截断
-src/port.c(264): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
-src/port.c(373): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
-src/port.c(386): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
-src/port.c(412): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
-src/port.c(444): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
-src/port.c(511): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(415): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(447): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
+src/port.c(514): warning C4312: “类型强制转换”: 从“unsigned long”转换到更大的“xThreadState *”
 exit code: 0
 TARGET = Some("x86_64-pc-windows-msvc")
 running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:E:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\libport.a" "/nologo" "E:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\port.o"
@@ -219,13 +209,12 @@ DEBUG = Some("true")
 running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\cl.exe" "/nologo" "/MD" "/Z7" "/W4" "/FoE:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\other.o" "/c" "src/other.c"
 other.c
 src/other.c: warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-src/other.c(11): warning C4100: “pvParameters”: 未引用的形参
-src/other.c(33): warning C4100: “pvParameters”: 未引用的形参
-src/other.c(55): warning C4311: “类型强制转换”: 从“void (__cdecl *)(void *)”到“int”的指针截断
-src/other.c(90): warning C4210: 使用了非标准扩展: 函数给定文件范围
-src/other.c(91): warning C4210: 使用了非标准扩展: 函数给定文件范围
-src/other.c(92): warning C4210: 使用了非标准扩展: 函数给定文件范围
-e:\我的程序\操作系统\x-rocker\demo_rust\src\other.c(116) : warning C4700: 使用了未初始化的局部变量“xTimerTaskHandle”
+src/other.c(9): warning C4100: “pvParameters”: 未引用的形参
+src/other.c(31): warning C4100: “pvParameters”: 未引用的形参
+src/other.c(86): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/other.c(87): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/other.c(88): warning C4210: 使用了非标准扩展: 函数给定文件范围
+src/other.c(81): warning C4101: “pcTaskName”: 未引用的局部变量
 exit code: 0
 TARGET = Some("x86_64-pc-windows-msvc")
 running: "E:\\Visual Studio\\VC\\Tools\\MSVC\\14.13.26128\\bin\\HostX64\\x64\\lib.exe" "/OUT:E:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\libother.a" "/nologo" "E:\\鎴戠殑绋嬪簭\\鎿嶄綔绯荤粺\\X-rocker\\demo_rust\\target\\debug\\build\\demo_rust-389a62975700ff60\\out\\src\\other.o"
