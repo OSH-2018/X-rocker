@@ -1,16 +1,7 @@
-//#include "test.lib"
-#pragma  comment(lib, "test.dll.lib")
-extern void test();
-int main(){
-	test();
-	return 0;
-}
-
-/*
 #include<stdio.h>
-#define add(a,b) a+b
 char s[100];
 char user[100]="WangHaoyu";
+static long px=123;
 int version=3;
 struct tire{
 	int color;
@@ -39,7 +30,7 @@ char* getcar(struct car*  x){
 	puts(s);
 	return s;
 }
-*/
+
 /*
 int main(){
 	struct car x;

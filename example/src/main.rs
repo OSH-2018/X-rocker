@@ -1,13 +1,5 @@
-#![crate_type = "staticlib"]
-#[no_mangle]
-pub extern "C" fn test() {
-    print!("HEllo");
-}
-
-
-/*
 extern crate libc;
-use libc::{c_int};
+use libc::{c_int,c_long};
 use std::ffi::CStr;
 use std::ffi::CString;
 use libc::c_char;
@@ -56,7 +48,7 @@ impl car{
 
 #[link(name = "ctt",kind="static")]
 extern "C" {
-
+static mut px: c_long;
 //static mut user: *mut c_char;
 //static mut version: c_int;
 //fn sum(a:c_int,b:c_int) -> c_int;
@@ -77,7 +69,11 @@ fn main() {
 let mut x = car::new(200,300,"Wang");
 let s=unsafe{get_string(getcar(&mut x))};
 println!("{}", s);
+unsafe{
+    print!("{}\n",px);
+    px=234;
+    print!("{}",px);
+}
 //print!("{}",unsafe{add(4,5)});
 //print!("{}",unsafe{get_string(user)});
 }
-*/
