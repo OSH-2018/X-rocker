@@ -1,5 +1,6 @@
 extern crate libc;
 use libc::{c_long,c_char,c_ulong,c_void};
+use std::ptr; 
 type portTickType = c_ulong;
 type portBASE_TYPE = c_long;
 
@@ -61,7 +62,7 @@ extern "C"{
 
 fn vTaskDelayUntil( pxPreviousWakeTime : *const c_ulong, xTimeIncrement : c_ulong)
 {
-    if  pxPreviousWaketime==0
+    if  pxPreviousWaketime==ptr::null()
     {
         unsafe{ vAssertCalled() };
     }

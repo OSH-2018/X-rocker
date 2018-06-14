@@ -132,7 +132,7 @@ PRIVILEGED_DATA tskTCB * volatile pxCurrentTCB = NULL;
 
 /* Lists for ready and blocked tasks. --------------------*/
 
-PRIVILEGED_DATA static xList pxReadyTasksLists[ configMAX_PRIORITIES ];	/*< Prioritised ready tasks. */
+PRIVILEGED_DATA xList pxReadyTasksLists[ configMAX_PRIORITIES ];	/*< Prioritised ready tasks. */
 PRIVILEGED_DATA static xList xDelayedTaskList1;							/*< Delayed tasks. */
 PRIVILEGED_DATA static xList xDelayedTaskList2;							/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
 PRIVILEGED_DATA static xList * volatile pxDelayedTaskList ;				/*< Points to the delayed task list currently being used. */
@@ -159,16 +159,16 @@ PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been r
 #endif
 
 /* File private variables. --------------------------------*/
-PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxCurrentNumberOfTasks 	= ( unsigned portBASE_TYPE ) 0U;
+PRIVILEGED_DATA volatile unsigned portBASE_TYPE uxCurrentNumberOfTasks 			= ( unsigned portBASE_TYPE ) 0U;
 PRIVILEGED_DATA volatile portTickType xTickCount 								= ( portTickType ) 0U;
-PRIVILEGED_DATA static unsigned portBASE_TYPE uxTopUsedPriority	 				= tskIDLE_PRIORITY;
-PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxTopReadyPriority 		= tskIDLE_PRIORITY;
+PRIVILEGED_DATA unsigned portBASE_TYPE uxTopUsedPriority	 					= tskIDLE_PRIORITY;
+PRIVILEGED_DATA volatile unsigned portBASE_TYPE uxTopReadyPriority 				= tskIDLE_PRIORITY;
 PRIVILEGED_DATA volatile signed portBASE_TYPE xSchedulerRunning 				= pdFALSE;
 PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxSchedulerSuspended	 	= ( unsigned portBASE_TYPE ) pdFALSE;
 PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxMissedTicks 			= ( unsigned portBASE_TYPE ) 0U;
 PRIVILEGED_DATA static volatile portBASE_TYPE xMissedYield 						= ( portBASE_TYPE ) pdFALSE;
 PRIVILEGED_DATA static volatile portBASE_TYPE xNumOfOverflows 					= ( portBASE_TYPE ) 0;
-PRIVILEGED_DATA static unsigned portBASE_TYPE uxTCBNumber 						= ( unsigned portBASE_TYPE ) 0U;
+PRIVILEGED_DATA unsigned portBASE_TYPE uxTCBNumber 								= ( unsigned portBASE_TYPE ) 0U;
 PRIVILEGED_DATA static portTickType xNextTaskUnblockTime						= ( portTickType ) portMAX_DELAY;
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
@@ -291,13 +291,13 @@ extern void vApplicationTickHook( void );
  * Utility to ready a TCB for a given task.  Mainly just copies the parameters
  * into the TCB structure.
  */
-static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
+void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
  * automatically upon the creation of the first task.
  */
-static void prvInitialiseTaskLists( void ) PRIVILEGED_FUNCTION;
+void prvInitialiseTaskLists( void ) PRIVILEGED_FUNCTION;
 
 /*
  * The idle task, which as all tasks is implemented as a never ending loop.
@@ -342,7 +342,7 @@ static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake ) PRIVILEGE
  * Allocates memory from the heap for a TCB and associated stack.  Checks the
  * allocation was successful.
  */
-static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer ) PRIVILEGED_FUNCTION;
+tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer ) PRIVILEGED_FUNCTION;
 
 /*
  * Called from vTaskList.  vListTasks details all the tasks currently under
@@ -1943,7 +1943,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 
 
-static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
+void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
 {
 	/* Store the function name in the TCB. */
 	#if configMAX_TASK_NAME_LEN > 1
@@ -2029,7 +2029,7 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const 
 	/*-----------------------------------------------------------*/
 #endif
 
-static void prvInitialiseTaskLists( void )
+void prvInitialiseTaskLists( void )
 {
 unsigned portBASE_TYPE uxPriority;
 
@@ -2095,8 +2095,29 @@ static void prvCheckTasksWaitingTermination( void )
 	#endif
 }
 /*-----------------------------------------------------------*/
+void prvACTTDL(portTickType xTimeToWake){
+	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
 
-static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
+	if( xTimeToWake < xTickCount )
+	{
+		/* Wake time has overflowed.  Place this item in the overflow list. */
+		vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+	}
+	else
+	{
+		/* The wake time has not overflowed, so we can use the current block list. */
+		vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+
+		/* If the task entering the blocked state was placed at the head of the
+		list of blocked tasks then xNextTaskUnblockTime needs to be updated
+		too. */
+		if( xTimeToWake < xNextTaskUnblockTime )
+		{
+			xNextTaskUnblockTime = xTimeToWake;
+		}
+	}
+}
+void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
 {
 	/* The list item will be inserted in wake time order. */
 	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
@@ -2122,14 +2143,14 @@ static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
 }
 /*-----------------------------------------------------------*/
 
-static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer )
+tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer )
 {
 tskTCB *pxNewTCB;
 
 	/* Allocate space for the TCB.  Where the memory comes from depends on
 	the implementation of the port malloc function. */
 	pxNewTCB = ( tskTCB * ) pvPortMalloc( sizeof( tskTCB ) );
-
+	//printf("1.1");
 	if( pxNewTCB != NULL )
 	{
 		/* Allocate space for the stack used by the task being created.
@@ -2138,6 +2159,7 @@ tskTCB *pxNewTCB;
 		pxNewTCB->pxStack = ( portSTACK_TYPE * ) pvPortMallocAligned( ( ( ( size_t )usStackDepth ) * sizeof( portSTACK_TYPE ) ), puxStackBuffer );
 		//printf("%d\n",usStackDepth);
 		//pxNewTCB->pxStack[999]=0;
+		//printf("1.2");
 		if( pxNewTCB->pxStack == NULL )
 		{
 			/* Could not allocate the stack.  Delete the allocated TCB. */
@@ -2150,7 +2172,7 @@ tskTCB *pxNewTCB;
 			memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( portSTACK_TYPE ) );
 		}
 	}
-
+	//printf("1.3");
 	return pxNewTCB;
 }
 /*-----------------------------------------------------------*/

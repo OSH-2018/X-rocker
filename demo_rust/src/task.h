@@ -1312,7 +1312,6 @@ unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
  */
 void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
 
-
 #ifdef __cplusplus
 }
 #endif
