@@ -2142,7 +2142,14 @@ void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
 	}
 }
 /*-----------------------------------------------------------*/
-
+void prvATTRQ(tskTCB *pxTCB)
+{
+	if( ( pxTCB )->uxPriority > uxTopReadyPriority )																	
+	{																													
+		uxTopReadyPriority = ( pxTCB )->uxPriority;																		
+	}																													
+	vListInsertEnd( ( xList * ) &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) );
+}
 tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer )
 {
 tskTCB *pxNewTCB;

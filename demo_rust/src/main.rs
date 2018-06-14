@@ -66,6 +66,7 @@ impl tskTCB {
 extern "C"{
     fn vAssertCalled();
     fn ptradd(p:*mut c_ulong,offset:c_ushort)->*mut c_ulong;
+    
 }
 #[link(name="port")]
 extern "C"{
@@ -91,10 +92,7 @@ extern "C"{
     static mut uxTopUsedPriority: c_ulong;
     static mut uxTCBNumber : c_ulong;
     static mut uxTopReadyPriority : c_ulong;
-    static mut pxReadyTasksLists : [xList;7];
-    fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,usStackDepth: c_ushort,
-                pvParameters:*mut c_void,uxPriority: c_long,pxCreatedTask:*mut (*mut c_void),
-                puxStackBuffer: *mut c_long,xRegions: *const xMemoryRegion)->c_long;         
+    static mut pxReadyTasksLists : [xList;7];        
     fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong);  
     fn vTaskSuspendAll();
     fn xTaskResumeAll()->c_long;
@@ -104,7 +102,8 @@ extern "C"{
                 xRegions: *const xMemoryRegion,usStackDepth: c_ushort);
     fn pxPortInitialiseStack(pxTopOfStack:*mut c_ulong,pxCode:extern fn(*mut c_void),
                 pvParameters:*mut c_void)->*mut c_ulong; 
-    fn prvInitialiseTaskLists();                  
+    fn prvInitialiseTaskLists();   
+    fn prvATTRQ(pxTCB: *mut tskTCB);               
 }
 extern fn vTask1(pvParameters: *mut c_void){ 
 	let uxPriority:c_ulong; 
@@ -133,7 +132,7 @@ extern fn vTask2(pvParameters: *mut c_void){
 	么处于就绪态，要么处于运行态。
 	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
 	uxPriority = uxTaskPriorityGet( ptr::null_mut() );
-    unsafe{xLastWakeTime = xTaskGetTickCount();}
+    xLastWakeTime = xTaskGetTickCount();
 	loop
 	{ 
 		/* 当任务运行到这里，任务1必然已经运行过了，并将本身务的优先级设置到高于任务1本身。 */ 
@@ -260,7 +259,7 @@ fn xTaskGetTickCount()->c_ulong {
     }
     xTicks
 }
-/*
+
 fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,usStackDepth: c_ushort,
                 pvParameters:*mut c_void,uxPriority: c_ulong,pxCreatedTask:*mut (*mut c_void),
                 puxStackBuffer: *mut c_ulong,xRegions: *const xMemoryRegion)->c_long{
@@ -269,24 +268,21 @@ fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,us
     if uxPriority>=7{
         unsafe{vAssertCalled();}
     }
-    pxNewTCB=&mut tskTCB::new();
-    let mut a=vec![0 as c_ulong;usStackDepth as usize];
-    print!("0");
+    //pxNewTCB=&mut tskTCB::new();
+    //let mut a=vec![0 as c_ulong;usStackDepth as usize];
     unsafe{
-        (*pxNewTCB).pxStack=&mut a[0];
+        //(*pxNewTCB).pxStack=&mut a[0];
         //(*pxNewTCB).pxTopOfStack=&mut a[(usStackDepth-1)as usize];
-        //pxNewTCB=prvAllocateTCBAndStack( usStackDepth, puxStackBuffer );
+        pxNewTCB=prvAllocateTCBAndStack( usStackDepth, puxStackBuffer );
     }
-    print!("1");
     if pxNewTCB!=ptr::null_mut(){
         let mut pxTopOfStack:*mut portSTACK_TYPE;
         unsafe{
-            //pxTopOfStack=ptradd((*pxNewTCB).pxStack,usStackDepth-1);
-            pxTopOfStack=&mut a[(usStackDepth-1)as usize];
+            pxTopOfStack=ptradd((*pxNewTCB).pxStack,usStackDepth-1);
+            //pxTopOfStack=&mut a[(usStackDepth-1)as usize];
             prvInitialiseTCBVariables( pxNewTCB, pcName, uxPriority, xRegions, usStackDepth );
             (*pxNewTCB).pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
         }
-        print!("2");
         if pxCreatedTask!=ptr::null_mut(){
             unsafe{*pxCreatedTask =pxNewTCB as xTaskHandle;}
         }
@@ -306,16 +302,12 @@ fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,us
 					}
 				}
             }
-            print!("3");
             if (*pxNewTCB).uxPriority > uxTopUsedPriority {
 				uxTopUsedPriority = (*pxNewTCB).uxPriority;
 			}
             (*pxNewTCB).uxTCBNumber = uxTCBNumber;
             uxTCBNumber+=1;
-            if (*pxNewTCB).uxPriority > uxTopReadyPriority {																													
-		        uxTopReadyPriority = (*pxNewTCB).uxPriority;																		
-	        }																													
-	        vListInsertEnd( &mut ( pxReadyTasksLists[ (*pxNewTCB ).uxPriority as usize ] ), &mut ( (*pxNewTCB).xGenericListItem ) );
+            prvATTRQ(pxNewTCB);			
             xReturn=1;
             vPortExitCritical();
             if xSchedulerRunning != 0 {
@@ -330,7 +322,7 @@ fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,us
     }
     xReturn
 }
-*/
+
 fn main() {
     unsafe{
         let mut name=CString::new("Task1").unwrap();
@@ -345,4 +337,3 @@ fn main() {
         
     }
 }
-//other.c中的函数可以改写到main.rs中

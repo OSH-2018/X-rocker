@@ -3,6 +3,7 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "list.h"
 static xSemaphoreHandle xMutexToDelete = NULL;
 static char *pcStatusMessage = "OK";
 void vAssertCalled( void )
