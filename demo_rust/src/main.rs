@@ -4,7 +4,6 @@ use std::ffi::CString;
 use std::ptr;
 use std::mem;
 type xTaskHandle= *mut c_void;
-type portBASE_TYPE= c_long;
 type portSTACK_TYPE= c_ulong;
 static mut xTask2Handle: xTaskHandle=ptr::null_mut();
 #[repr(C)]
@@ -80,7 +79,7 @@ extern "C"{
 #[link(name="list")]
 extern "C"{
     fn vListRemove (pxItemToRemove: *mut xListItem);
-    fn vListInsertEnd(pxList: *mut xList,pxNewListItem: *mut xListItem);
+    //fn vListInsertEnd(pxList: *mut xList,pxNewListItem: *mut xListItem);
 }
 #[link(name="tasks")]
 extern "C"{
@@ -91,9 +90,9 @@ extern "C"{
     static mut uxCurrentNumberOfTasks : c_ulong; 	
     static mut uxTopUsedPriority: c_ulong;
     static mut uxTCBNumber : c_ulong;
-    static mut uxTopReadyPriority : c_ulong;
+    //static mut uxTopReadyPriority : c_ulong;
     static mut pxReadyTasksLists : [xList;7];        
-    fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong);  
+    //fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong);  
     fn vTaskSuspendAll();
     fn xTaskResumeAll()->c_long;
     fn prvACTTDL(xTimeToWake: c_ulong);
@@ -105,7 +104,7 @@ extern "C"{
     fn prvInitialiseTaskLists();   
     fn prvATTRQ(pxTCB: *mut tskTCB);               
 }
-extern fn vTask1(pvParameters: *mut c_void){ 
+extern fn vTask1(_pvParameters: *mut c_void){ 
 	let uxPriority:c_ulong; 
 	/* 本任务将会比任务2更先运行，因为本任务创建在更高的优先级上。任务1和任务2都不会阻塞，所以两者要
 	么处于就绪态，要么处于运行态。
@@ -119,13 +118,13 @@ extern fn vTask1(pvParameters: *mut c_void){
 		中具有最高优先级的任务)。注意调用vTaskPrioritySet()时用到的任务2的句柄。程序清单24将展示
 		如何得到这个句柄。 */ 
 		print!( "About to raise the Task2 priority\r\n" ); 
-		unsafe{vTaskPrioritySet( xTask2Handle, uxPriority +  1  );} 
+		unsafe{vTaskPrioritySet( xTask2Handle, uxPriority +  1  );}
 		/* 本任务只会在其优先级高于任务2时才会得到执行。因此，当此任务运行到这里时，任务2必然已经执
 		行过了，并且将其自身的优先级设置回比任务1更低的优先级。 */ 		
 		vTaskDelay(50);	
 	} 
 } 
-extern fn vTask2(pvParameters: *mut c_void){ 
+extern fn vTask2(_pvParameters: *mut c_void){ 
 	let uxPriority:c_ulong; 
     let mut xLastWakeTime:c_ulong;
 	/* 本任务将会比任务2更先运行，因为本任务创建在更高的优先级上。任务1和任务2都不会阻塞，所以两者要
@@ -140,12 +139,11 @@ extern fn vTask2(pvParameters: *mut c_void){
 		/* 将自己的优先级设置回原来的值。传递NULL句柄值意味“改变我自己的优先级”。把优先级设置到低
 		于任务1使得任务1立即得到执行 – 任务1抢占本任务。 */ 
 		print!( "About to lower the Task2 priority\r\n" ); 
-		unsafe{vTaskPrioritySet( ptr::null_mut(), uxPriority - 2);}
-        vTaskDelayUntil(&mut xLastWakeTime, 50);
-		//vTaskDelay(50);	
+		vTaskPrioritySet( ptr::null_mut(), uxPriority - 2);
+        vTaskDelayUntil(&mut xLastWakeTime, 50);	
 	} 
 } 
-extern fn prvIdleTask(pvParameters: *mut c_void){
+extern fn prvIdleTask(_pvParameters: *mut c_void){
 }
 fn vTaskStartScheduler(){
     let xReturn:c_long;
@@ -263,8 +261,8 @@ fn xTaskGetTickCount()->c_ulong {
 fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,usStackDepth: c_ushort,
                 pvParameters:*mut c_void,uxPriority: c_ulong,pxCreatedTask:*mut (*mut c_void),
                 puxStackBuffer: *mut c_ulong,xRegions: *const xMemoryRegion)->c_long{
-    let mut xReturn: c_long=0;
-    let mut pxNewTCB: *mut tskTCB;
+    let xReturn: c_long;
+    let pxNewTCB: *mut tskTCB;
     if uxPriority>=7{
         unsafe{vAssertCalled();}
     }
@@ -276,7 +274,7 @@ fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,us
         pxNewTCB=prvAllocateTCBAndStack( usStackDepth, puxStackBuffer );
     }
     if pxNewTCB!=ptr::null_mut(){
-        let mut pxTopOfStack:*mut portSTACK_TYPE;
+        let pxTopOfStack:*mut portSTACK_TYPE;
         unsafe{
             pxTopOfStack=ptradd((*pxNewTCB).pxStack,usStackDepth-1);
             //pxTopOfStack=&mut a[(usStackDepth-1)as usize];
@@ -323,13 +321,58 @@ fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,us
     xReturn
 }
 
-fn main() {
+fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong){
+    let pxTCB: *mut tskTCB;
+	let uxCurrentPriority: c_ulong;
+	let mut xYieldRequired: c_long = 0;
+    let mut priority: c_ulong=uxNewPriority;
+    if priority >= 7 {
+        unsafe{vAssertCalled();}
+		priority = 6;
+	}
     unsafe{
+        vPortEnterCritical();
+        if pxTask==ptr::null_mut(){
+            pxTCB=pxCurrentTCB;
+        }
+        else {
+            pxTCB=pxTask as *mut tskTCB;
+        }
+        uxCurrentPriority = (*pxTCB).uxBasePriority;
+        if uxCurrentPriority!=priority{
+            if priority>uxCurrentPriority{
+                if (pxTask as *mut tskTCB)!=pxTCB{
+                    xYieldRequired=1;
+                }
+            }
+            else{
+                if (pxTask as *mut tskTCB)==pxTCB{
+                    xYieldRequired=1;
+                }
+            } 
+            if (*pxTCB).uxBasePriority == (*pxTCB).uxPriority {
+				(*pxTCB).uxPriority = uxNewPriority;
+			}
+			(*pxTCB).uxBasePriority = uxNewPriority;
+            (*pxTCB).xEventListItem.xItemValue = 7-priority;
+            if ((*pxTCB).xGenericListItem.pvContainer)as *mut xList == &mut pxReadyTasksLists[uxCurrentPriority as usize]{
+                vListRemove(&mut (*pxTCB).xGenericListItem);
+				prvATTRQ(pxTCB);
+            }
+            if xYieldRequired==1{
+                vPortGenerateSimulatedInterrupt(0);
+            }
+        }
+        vPortExitCritical();
+    }
+}
+fn main() {
         let mut name=CString::new("Task1").unwrap();
         let p1:*mut c_void=ptr::null_mut();
         let p2:*mut(*mut c_void)=ptr::null_mut();
         xTaskGenericCreate(vTask1,name.as_ptr(),1000,p1,2,p2,ptr::null_mut(),ptr::null());
         name=CString::new("Task2").unwrap();
+    unsafe{    
         xTaskGenericCreate(vTask2,name.as_ptr(),1000,p1,1,&mut xTask2Handle,ptr::null_mut(),ptr::null());
     }    
     vTaskStartScheduler();
