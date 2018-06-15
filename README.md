@@ -40,7 +40,7 @@ main
 在Demo中，我创建了3个任务。其中，任务1和任务3都是在主程序中创建的，任务2是由任务1创建的。通过这三个任务，我使用了前述的七个API。  
 任务3在创建时的优先级最高，会最先运行。但它的功能是删除自身，所以只输出一句话，之后就不再出现。任务2由任务1创建，这两个任务的优先级交替提升,因此都有执行的机会，不会饿死。  
 任务的执行流程如下：
-![图片](https://github.com/OSH-2018/X-rocker/blob/master/pic/12.jpg?raw=true)  
+![图片](https://github.com/OSH-2018/X-rocker/blob/master/pic/12.png?raw=true)  
 
 ```Rust
 extern fn vTask1(_pvParameters: *mut c_void){ 
