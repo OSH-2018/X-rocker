@@ -43,7 +43,7 @@ main
 通过对比出错的demo和官方的demo。我们发现，我们自己编写的程序是64位的，而官方demo是32位的，问题可能出在这里。但是，我们自己用C写的测试程序也是64位的，却没有任何问题。  
 经过艰难的调试，我们发现：在许多地方，程序采用强制类型转换获取数据。  
 ```C
-pxThreadState = ( xThreadState *) *( ( unsigned long* ) pvOldCurrentTCB );
+pxThreadState = ( xThreadState *) *( ( unsigned long long* ) pvOldCurrentTCB );
 ```
 在读取内存时，将数据强制转换为32位的unsigned long类型，再转换为需要的类型。由于位数不够，地址的高32位被舍弃，只剩下了低32位，导致读写错误。因此，将unsigned long 改为unsigned long long 就可以解决问题。  
 至于C的demo和rust的demo结果不同的问题，可能是因为两种编译器默认的内存地址不同。C分配的虚拟地址可能较小，高32位都被填充为0，因此地址截断对其没有影响。
