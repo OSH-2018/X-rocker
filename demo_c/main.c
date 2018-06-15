@@ -23,7 +23,6 @@ void vTask2( void *pvParameters )
 	就绪态，要么处于运行态。
 	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
 	uxPriority = uxTaskPriorityGet( NULL ); 
-	xTaskCreate( vTask3, "Task 3", 1000, NULL, 3, NULL );//创建任务3
 	for( ;; ) 
 	{ 
 		/* 当任务运行到这里，任务1必然已经运行过了，并将本身务的优先级设置到高于任务1本身。 */ 
@@ -60,8 +59,9 @@ void vTask1( void *pvParameters )
 } 
 int main( void ) 
 { 
-/* Create one task. */ 
+/* Create tasks. */ 
 	xTaskCreate( vTask1, "Task 1", 1000, NULL, 2, NULL ); 
+	xTaskCreate( vTask3, "Task 3", 1000, NULL, 3, NULL );//创建任务3
 /* Start the scheduler so our tasks start executing. */ 
 	vTaskStartScheduler(); 
 /* If all is well then main() will never reach here as the scheduler will 
