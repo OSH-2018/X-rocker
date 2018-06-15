@@ -5,7 +5,6 @@ use std::ptr;
 use std::mem;
 type xTaskHandle= *mut c_void;
 type portSTACK_TYPE= c_ulong;
-static mut xTask2Handle: xTaskHandle=ptr::null_mut();
 #[repr(C)]
 pub struct xMemoryRegion{
 	pvBaseAddress: *mut c_void,
@@ -79,7 +78,7 @@ extern "C"{
 #[link(name="list")]
 extern "C"{
     fn vListRemove (pxItemToRemove: *mut xListItem);
-    //fn vListInsertEnd(pxList: *mut xList,pxNewListItem: *mut xListItem);
+    fn vListInsertEnd(pxList: *mut xList,pxNewListItem: *mut xListItem);
 }
 #[link(name="tasks")]
 extern "C"{
@@ -90,6 +89,8 @@ extern "C"{
     static mut uxCurrentNumberOfTasks : c_ulong; 	
     static mut uxTopUsedPriority: c_ulong;
     static mut uxTCBNumber : c_ulong;
+    static mut xTasksWaitingTermination : xList;
+    static mut uxTasksDeleted : c_ulong;
     //static mut uxTopReadyPriority : c_ulong;
     static mut pxReadyTasksLists : [xList;7];        
     //fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong);  
@@ -106,10 +107,13 @@ extern "C"{
 }
 extern fn vTask1(_pvParameters: *mut c_void){ 
 	let uxPriority:c_ulong; 
+    let mut xTask2Handle: xTaskHandle=ptr::null_mut();
 	/* 本任务将会比任务2更先运行，因为本任务创建在更高的优先级上。任务1和任务2都不会阻塞，所以两者要
 	么处于就绪态，要么处于运行态。
 	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
 	uxPriority = uxTaskPriorityGet( ptr::null_mut() );
+    xTaskGenericCreate(vTask2,CString::new("Task2").unwrap().as_ptr(),1000,ptr::null_mut(),1,&mut xTask2Handle,ptr::null_mut(),ptr::null());
+    /*任务2的创建*/
 	loop
 	{ 
 		/* Print out the name of this task. */ 
@@ -118,7 +122,7 @@ extern fn vTask1(_pvParameters: *mut c_void){
 		中具有最高优先级的任务)。注意调用vTaskPrioritySet()时用到的任务2的句柄。程序清单24将展示
 		如何得到这个句柄。 */ 
 		print!( "About to raise the Task2 priority\r\n" ); 
-		unsafe{vTaskPrioritySet( xTask2Handle, uxPriority +  1  );}
+		vTaskPrioritySet( xTask2Handle, uxPriority +  1  );
 		/* 本任务只会在其优先级高于任务2时才会得到执行。因此，当此任务运行到这里时，任务2必然已经执
 		行过了，并且将其自身的优先级设置回比任务1更低的优先级。 */ 		
 		vTaskDelay(50);	
@@ -131,8 +135,8 @@ extern fn vTask2(_pvParameters: *mut c_void){
 	么处于就绪态，要么处于运行态。
 	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
 	uxPriority = uxTaskPriorityGet( ptr::null_mut() );
-    xLastWakeTime = xTaskGetTickCount();
-	loop
+    xLastWakeTime = xTaskGetTickCount();//获取当前时间
+    loop
 	{ 
 		/* 当任务运行到这里，任务1必然已经运行过了，并将本身务的优先级设置到高于任务1本身。 */ 
 		print!( "Task2 is running\r\n" ); 
@@ -143,6 +147,14 @@ extern fn vTask2(_pvParameters: *mut c_void){
         vTaskDelayUntil(&mut xLastWakeTime, 50);	
 	} 
 } 
+extern fn vTask3(_pvParameters: *mut c_void){
+    loop{
+		print!("Task3 is running.\r\n");
+		print!("I'm going to delete myself.\r\n");
+		vTaskDelete(ptr::null_mut());
+		print!("This sentence will never be printed.\r\n");
+	}
+}
 extern fn prvIdleTask(_pvParameters: *mut c_void){
 }
 fn vTaskStartScheduler(){
@@ -257,7 +269,6 @@ fn xTaskGetTickCount()->c_ulong {
     }
     xTicks
 }
-
 fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,usStackDepth: c_ushort,
                 pvParameters:*mut c_void,uxPriority: c_ulong,pxCreatedTask:*mut (*mut c_void),
                 puxStackBuffer: *mut c_ulong,xRegions: *const xMemoryRegion)->c_long{
@@ -320,7 +331,6 @@ fn xTaskGenericCreate(pxTaskCode:extern fn(*mut c_void),pcName: *const c_char,us
     }
     xReturn
 }
-
 fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong){
     let pxTCB: *mut tskTCB;
 	let uxCurrentPriority: c_ulong;
@@ -366,15 +376,33 @@ fn vTaskPrioritySet(pxTask: xTaskHandle,uxNewPriority: c_ulong){
         vPortExitCritical();
     }
 }
+fn vTaskDelete(pxTaskToDelete: xTaskHandle){
+    let pxTCB: *mut tskTCB;
+    unsafe{
+        vPortEnterCritical();
+        if pxTaskToDelete==ptr::null_mut(){
+            pxTCB=pxCurrentTCB;
+        }
+        else {
+            pxTCB=pxTaskToDelete as *mut tskTCB;
+        }
+        vListRemove(&mut (*pxTCB).xGenericListItem);
+        if(*pxTCB).xEventListItem.pvContainer != ptr::null_mut(){
+			vListRemove(&mut(*pxTCB).xEventListItem);
+		}
+		vListInsertEnd(&mut xTasksWaitingTermination,&mut (*pxTCB).xGenericListItem);
+        uxTasksDeleted+=1;
+		uxTCBNumber+=1;
+        vPortExitCritical();
+        if (xSchedulerRunning != 0)&&(pxTaskToDelete == ptr::null_mut()){
+			vPortGenerateSimulatedInterrupt(0);
+		}		
+    }
+}
 fn main() {
-        let mut name=CString::new("Task1").unwrap();
-        let p1:*mut c_void=ptr::null_mut();
-        let p2:*mut(*mut c_void)=ptr::null_mut();
-        xTaskGenericCreate(vTask1,name.as_ptr(),1000,p1,2,p2,ptr::null_mut(),ptr::null());
-        name=CString::new("Task2").unwrap();
-    unsafe{    
-        xTaskGenericCreate(vTask2,name.as_ptr(),1000,p1,1,&mut xTask2Handle,ptr::null_mut(),ptr::null());
-    }    
+    let name=CString::new("Task1").unwrap();
+    xTaskGenericCreate(vTask1,name.as_ptr(),1000,ptr::null_mut(),2,ptr::null_mut(),ptr::null_mut(),ptr::null());
+    xTaskGenericCreate(vTask3,CString::new("Task3").unwrap().as_ptr(),1000,ptr::null_mut(),1,ptr::null_mut(),ptr::null_mut(),ptr::null());
     vTaskStartScheduler();
     loop {
         

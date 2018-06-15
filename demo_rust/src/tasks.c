@@ -141,8 +141,8 @@ PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been r
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
-	PRIVILEGED_DATA static xList xTasksWaitingTermination;				/*< Tasks that have been deleted - but the their memory not yet freed. */
-	PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxTasksDeleted = ( unsigned portBASE_TYPE ) 0U;
+	PRIVILEGED_DATA xList xTasksWaitingTermination;				/*< Tasks that have been deleted - but the their memory not yet freed. */
+	PRIVILEGED_DATA volatile unsigned portBASE_TYPE uxTasksDeleted = ( unsigned portBASE_TYPE ) 0U;
 
 #endif
 

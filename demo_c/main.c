@@ -2,35 +2,20 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "timers.h"
 #include "semphr.h"
-#include "TimerDemo.h"
 #define mainTIMER_TEST_PERIOD			( 250 )
 static xSemaphoreHandle xMutexToDelete = NULL;
 static char *pcStatusMessage = "OK";
-xTaskHandle xTask2Handle; 
-void vTask1( void *pvParameters ) 
-{ 
-	unsigned portBASE_TYPE uxPriority; 
-	/* 本任务将会比任务2更先运行，因为本任务创建在更高的优先级上。任务1和任务2都不会阻塞，所以两者要
-	么处于就绪态，要么处于运行态。
-	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
-	uxPriority = uxTaskPriorityGet( NULL ); 
-	for( ;; ) 
-	{ 
-		/* Print out the name of this task. */ 
-		printf( "Task1 is running\r\n" ); 
-		/* 把任务2的优先级设置到高于任务1的优先级，会使得任务2立即得到执行(因为任务2现在是所有任务
-		中具有最高优先级的任务)。注意调用vTaskPrioritySet()时用到的任务2的句柄。程序清单24将展示
-		如何得到这个句柄。 */ 
-		//vTaskDelay(250);
-		printf( "About to raise the Task2 priority\r\n" ); 
-		vTaskPrioritySet( xTask2Handle, ( uxPriority +  1 ) ); 
-		/* 本任务只会在其优先级高于任务2时才会得到执行。因此，当此任务运行到这里时，任务2必然已经执
-		行过了，并且将其自身的优先级设置回比任务1更低的优先级。 */ 		
-		vTaskDelay(50);	
-	} 
-} 
+void vTask3( void *pvParameters)
+{
+	for (;;)
+	{
+		printf("Task3 is running.\r\n");
+		printf("I'm going to delete myself.\r\n");
+		vTaskDelete(NULL);
+		printf("This sentence will never be printed.\r\n");
+	}
+}
 void vTask2( void *pvParameters ) 
 { 
 	unsigned portBASE_TYPE uxPriority; 
@@ -38,25 +23,45 @@ void vTask2( void *pvParameters )
 	就绪态，要么处于运行态。
 	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
 	uxPriority = uxTaskPriorityGet( NULL ); 
+	xTaskCreate( vTask3, "Task 3", 1000, NULL, 3, NULL );//创建任务3
 	for( ;; ) 
 	{ 
 		/* 当任务运行到这里，任务1必然已经运行过了，并将本身务的优先级设置到高于任务1本身。 */ 
 		printf( "Task2 is running\r\n" ); 
-		//vTaskDelay(250);
-		/* 将自己的优先级设置回原来的值。传递NULL句柄值意味“改变我己自的优先级”。把优先级设置到低
+		/* 将自己的优先级设置回原来的值。传递NULL句柄值意味“改变我自己的优先级”。把优先级设置到低
 		于任务1使得任务1立即得到执行 – 任务1抢占本任务。 */ 
 		printf( "About to lower the Task2 priority\r\n" ); 
 		vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
 		vTaskDelay(50);
 	}
 }
-
+void vTask1( void *pvParameters ) 
+{ 
+	unsigned portBASE_TYPE uxPriority; 
+	xTaskHandle xTask2Handle; //任务2的句柄
+	/* 本任务将会比任务2更先运行，因为本任务创建在更高的优先级上。任务1和任务2都不会阻塞，所以两者要
+	么处于就绪态，要么处于运行态。
+	查询本任务当前运行的优先级 – 传递一个NULL值表示说“返回我自己的优先级”。 */ 
+	uxPriority = uxTaskPriorityGet( NULL ); 
+	xTaskCreate( vTask2, "Task 2", 1000, NULL, 1, &xTask2Handle );//创建任务2
+	for( ;; ) 
+	{ 
+		/* Print out the name of this task. */ 
+		printf( "Task1 is running\r\n" ); 
+		/* 把任务2的优先级设置到高于任务1的优先级，会使得任务2立即得到执行(因为任务2现在是所有任务
+		中具有最高优先级的任务)。注意调用vTaskPrioritySet()时用到的任务2的句柄。程序清单24将展示
+		如何得到这个句柄。 */ 
+		printf( "About to raise the Task2 priority\r\n" ); 
+		vTaskPrioritySet( xTask2Handle, ( uxPriority +  1 ) ); 
+		/* 本任务只会在其优先级高于任务2时才会得到执行。因此，当此任务运行到这里时，任务2必然已经执
+		行过了，并且将其自身的优先级设置回比任务1更低的优先级。 */ 		
+		vTaskDelay(50);	
+	} 
+} 
 int main( void ) 
 { 
-/* Create one of the two tasks. */ 
+/* Create one task. */ 
 	xTaskCreate( vTask1, "Task 1", 1000, NULL, 2, NULL ); 
-	xTaskCreate( vTask2, "Task 2", 1000, NULL, 1, &xTask2Handle ); 
-	//vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 /* Start the scheduler so our tasks start executing. */ 
 	vTaskStartScheduler(); 
 /* If all is well then main() will never reach here as the scheduler will 
@@ -83,7 +88,6 @@ void vApplicationTickHook( void )
 {
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
-	//vTimerPeriodicISRTests();
 }
 
 
@@ -110,7 +114,6 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
 	the task number. */
 	xIdleTaskHandle = xTaskGetIdleTaskHandle();
-	//xTimerTaskHandle = xTimerGetTimerDaemonTaskHandle();
 	vTaskSetTaskNumber( xIdleTaskHandle, ( unsigned long ) ucConstTaskNumber );
 	configASSERT( uxTaskGetTaskNumber( xIdleTaskHandle ) == ucConstTaskNumber );
 
