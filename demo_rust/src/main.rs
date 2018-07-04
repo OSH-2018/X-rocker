@@ -402,7 +402,7 @@ fn vTaskDelete(pxTaskToDelete: xTaskHandle){
 fn main() {
     let name=CString::new("Task1").unwrap();
     xTaskGenericCreate(vTask1,name.as_ptr(),1000,ptr::null_mut(),2,ptr::null_mut(),ptr::null_mut(),ptr::null());
-    xTaskGenericCreate(vTask3,CString::new("Task3").unwrap().as_ptr(),1000,ptr::null_mut(),1,ptr::null_mut(),ptr::null_mut(),ptr::null());
+    xTaskGenericCreate(vTask3,CString::new("Task3").unwrap().as_ptr(),1000,ptr::null_mut(),3,ptr::null_mut(),ptr::null_mut(),ptr::null());
     vTaskStartScheduler();
     loop {
         
